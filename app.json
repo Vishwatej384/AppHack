@@ -10,12 +10,30 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
-      "apiUrl": "http://10.231.26.111:5000"
-    }
+      "apiUrl": "http://10.231.26.111:5000",
+      "eas": {
+        "projectId": "a181e3b0-9f9e-48e3-a764-dcab58ae8132"
+      }
+    },
+    "android": {
+      "package": "com.smartcampus.app",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/splash-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "usesCleartextTraffic": true
+    },
+    "owner": "vishwatej14"
   }
 }

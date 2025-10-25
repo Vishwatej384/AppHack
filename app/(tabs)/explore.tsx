@@ -1,119 +1,140 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import React from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ExploreScreen() {
+  const router = useRouter();
+
   const features = [
     {
       title: "Lost & Found",
-      desc: "Report or claim lost belongings easily.",
-      icon: <MaterialIcons name="search" size={32} color="#fff" />,
-      colors: ["#FF512F", "#DD2476"] as const,
+      desc: "Report or claim lost items.",
+      icon: <MaterialIcons name="search" size={28} color="#fff" />,
+      colors: ["#FF6B6B", "#F94D6A"],
+      route: "/LostFound",
     },
     {
-      title: "Student Clubs",
-      desc: "Join communities and grow your passion.",
-      icon: <FontAwesome5 name="users" size={28} color="#fff" />,
-      colors: ["#4A3C6A", "#191654"] as const,
+      title: "Library",
+      desc: "Borrow, return, or request books.",
+      icon: <FontAwesome5 name="book" size={24} color="#fff" />,
+      colors: ["#26C6DA", "#00ACC1"],
+      route: "/Library",
     },
     {
-      title: "Feedback Portal",
-      desc: "Share your thoughts to improve campus life.",
-      icon: <Ionicons name="chatbubbles" size={30} color="#fff" />,
-      colors: ["#F7971E", "#FFD200"] as const,
+      title: "Cafeteria",
+      desc: "View menu and rate food.",
+      icon: <FontAwesome5 name="hamburger" size={24} color="#fff" />,
+      colors: ["#FF7043", "#F4511E"],
+      route: "/Cafeteria",
     },
-  ] as const;
+    {
+      title: "StudentClubs",
+      desc: "Join and manage campus clubs.",
+      icon: <FontAwesome5 name="users" size={24} color="#fff" />,
+      colors: ["#8E2DE2", "#4A00E0"],
+      route: "/StudentClubs",
+    },
+    {
+      title: "Feedback",
+      desc: "Send feedback to administration.",
+      icon: <Entypo name="chat" size={26} color="#fff" />,
+      colors: ["#FFA726", "#FB8C00"],
+      route: "/FeedbackPortal",
+    },
+    {
+      title: "Sports",
+      desc: "Book courts or view schedules.",
+      icon: <FontAwesome5 name="football-ball" size={24} color="#fff" />,
+      colors: ["#1E90FF", "#0066FF"],
+      route: "/SportsComplex",
+    },
+  ];
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    >
-      {/* HEADER */}
-      <View style={styles.header}>
-        <Text variant="headlineLarge" style={styles.headerText}>
-          Explore Campus 🌟
-        </Text>
-        <Text style={styles.subtitle}>
-          Discover features that make your campus life smarter.
-        </Text>
-      </View>
+    <LinearGradient colors={["#F5F7FA", "#C3CFE2"]} style={styles.container}>
+      <Text style={styles.title}>Explore Campus</Text>
 
-      {/* FEATURE CARDS */}
-      {features.map((feature, index) => (
-        <Card key={index} style={styles.card} mode="elevated">
-          <LinearGradient
-            colors={feature.colors}
-            style={styles.gradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <View style={styles.iconContainer}>{feature.icon}</View>
-            <View style={styles.textContainer}>
-              <Text variant="titleLarge" style={styles.cardTitle}>
-                {feature.title}
-              </Text>
-              <Text style={styles.cardDesc}>{feature.desc}</Text>
-            </View>
-          </LinearGradient>
-        </Card>
-      ))}
-    </ScrollView>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <View style={styles.grid}>
+          {features.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.85}
+              onPress={() => router.push(item.route)}
+              style={styles.cardWrapper}
+            >
+              <LinearGradient colors={item.colors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.card}>
+                <View style={styles.icon}>{item.icon}</View>
+                <View>
+                  <Text style={styles.cardTitle}>{item.title}</Text>
+                  <Text style={styles.cardDesc}>{item.desc}</Text>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
   },
-  content: {
-    padding: 16,
+  title: {
+    fontSize: 30,
+    fontWeight: "700",
+    color: "#222",
+    marginTop: 60,
+    marginLeft: 25,
+    marginBottom: 10,
+    letterSpacing: 0.5,
   },
-  header: {
-    marginBottom: 20,
-    alignItems: "center",
+  scroll: {
+    paddingHorizontal: 10,
+    paddingBottom: 50,
   },
-  headerText: {
-    fontWeight: "bold",
-    color: "#1f2937",
-    textAlign: "center",
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
   },
-  subtitle: {
-    textAlign: "center",
-    color: "#6b7280",
-    marginTop: 6,
+  cardWrapper: {
+    width: "45%",
+    marginVertical: 12,
   },
   card: {
-    borderRadius: 16,
-    marginVertical: 10,
-    overflow: "hidden",
+    borderRadius: 22,
+    padding: 18,
+    height: 160,
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 8,
+    elevation: 6,
+    borderWidth: 0.5,
+    borderColor: "rgba(255,255,255,0.3)",
   },
-  gradient: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-  },
-  iconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "rgba(255,255,255,0.15)",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  textContainer: {
-    flex: 1,
+  icon: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+    padding: 10,
+    borderRadius: 14,
+    alignSelf: "flex-start",
   },
   cardTitle: {
     color: "#fff",
+    fontSize: 18,
     fontWeight: "bold",
+    marginTop: 10,
   },
   cardDesc: {
-    color: "#f3f4f6",
-    marginTop: 4,
+    color: "#fff",
+    fontSize: 13,
+    opacity: 0.85,
+    marginTop: 3,
   },
 });

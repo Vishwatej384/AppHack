@@ -1,10 +1,10 @@
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { HapticTab } from "@/components/haptic-tab";
+import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Colors } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -13,15 +13,17 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         tabBarButton: HapticTab,
         tabBarStyle: {
           backgroundColor:
-            colorScheme === 'dark'
+            colorScheme === "dark"
               ? Colors.dark.background
               : Colors.light.background,
           borderTopWidth: 0.3,
-          borderTopColor: Colors[colorScheme ?? 'light'].tint + '30',
+          borderTopColor: Colors[colorScheme ?? "light"].tint + "30",
+          elevation: 8,
+          shadowColor: "#000",
         },
       }}
     >
@@ -29,7 +31,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: "Home",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
@@ -40,7 +42,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: "Explore",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
@@ -51,13 +53,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="announcements"
         options={{
-          title: 'Announcements',
+          title: "Announcements",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="bullhorn"
-              size={26}
-              color={color}
-            />
+            <MaterialCommunityIcons name="bullhorn" size={26} color={color} />
           ),
         }}
       />
@@ -66,13 +64,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="schedule"
         options={{
-          title: 'Schedule',
+          title: "Schedule",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="calendar"
-              size={26}
-              color={color}
-            />
+            <MaterialCommunityIcons name="calendar" size={26} color={color} />
           ),
         }}
       />
@@ -81,13 +75,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: "Profile",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="account"
-              size={26}
-              color={color}
-            />
+            <MaterialCommunityIcons name="account" size={26} color={color} />
           ),
         }}
       />
