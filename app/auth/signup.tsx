@@ -51,7 +51,7 @@ export default function SignupScreen() {
 
       <Button title="Sign Up" onPress={handleSignup} />
 
-      <Text style={styles.link} onPress={() => router.push('/login')}>
+      <Text style={styles.link} onPress={() => router.push('./login')}>
         Already have an account? Log in
       </Text>
     </View>

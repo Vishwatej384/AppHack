@@ -19,7 +19,7 @@ export default function ProfileScreen() {
 
   const handleLogout = async () => {
     await logoutUser();
-    router.replace('/login');
+    router.replace('../auth/login');
   };
 
   const initials =
@@ -69,7 +69,7 @@ export default function ProfileScreen() {
               Logout
             </Button>
           ) : (
-            <Button mode="contained" onPress={() => router.push('/login')}>
+            <Button mode="contained" onPress={() => router.push('../auth/login')}>
               Login
             </Button>
           )}

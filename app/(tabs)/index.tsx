@@ -1,11 +1,42 @@
-import { useRouter } from 'expo-router'; // ✅ import router
-import React from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Text, useTheme } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Avatar, Button, Card, Text, useTheme } from 'react-native-paper';
+import { getCurrentUser } from '../utils/auth';
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const router = useRouter(); // ✅ initialize router
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useFocusEffect(
+  React.useCallback(() => {
+    let isActive = true;
+
+    const fetchUser = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        if (isActive) setUser(currentUser);
+      } catch (e) {
+        console.warn('fetchUser error', e);
+      }
+    };
+
+    fetchUser();
+
+    return () => {
+      isActive = false;
+    };
+  }, [])
+);
+
+  const initials =
+    user?.name
+      ?.split(' ')
+      .map((n: string) => n[0])
+      .join('')
+      .toUpperCase() || 'GU'; // GU = Guest User
 
   return (
     <ScrollView
@@ -14,11 +45,25 @@ export default function HomeScreen() {
         { backgroundColor: theme.colors.background },
       ]}
     >
-      <Image
-        source={require('../../assets/images/icon.png')}
-        style={styles.banner}
-      />
+      {/* --- Header with Profile Avatar --- */}
+      <View style={styles.header}>
+        <Image
+          source={require('../../assets/images/icon.png')}
+          style={styles.banner}
+        />
+        <TouchableOpacity
+          onPress={() => router.push('/profile/profile')}
+          style={styles.avatarContainer}
+        >
+          <Avatar.Text
+            size={45}
+            label={initials}
+            style={{ backgroundColor: theme.colors.primary }}
+          />
+        </TouchableOpacity>
+      </View>
 
+      {/* --- Title and Subtitle --- */}
       <Text
         variant="headlineLarge"
         style={[styles.title, { color: theme.colors.primary }]}
@@ -32,26 +77,23 @@ export default function HomeScreen() {
         Your digital companion for campus life — events, classes, and more!
       </Text>
 
+      {/* --- Cards --- */}
       <View style={styles.cardsContainer}>
-        {/* --- Campus Events --- */}
         <Card style={styles.card} mode="elevated">
           <Card.Title title="🎉 Campus Events" titleVariant="titleLarge" />
           <Card.Content>
-            <Text>
-              Stay updated with upcoming fests, seminars, and workshops.
-            </Text>
+            <Text>Stay updated with upcoming fests, seminars, and workshops.</Text>
           </Card.Content>
           <Card.Actions>
             <Button
               mode="contained"
-              onPress={() => router.push('/(tabs)/explore')} // ✅ navigate
+              onPress={() => router.push('/(tabs)/explore')}
             >
               Explore
             </Button>
           </Card.Actions>
         </Card>
 
-        {/* --- Class Schedule --- */}
         <Card style={styles.card} mode="elevated">
           <Card.Title title="📚 Class Schedule" titleVariant="titleLarge" />
           <Card.Content>
@@ -60,41 +102,28 @@ export default function HomeScreen() {
           <Card.Actions>
             <Button
               mode="outlined"
-              onPress={() => router.push('/(tabs)/schedule')} // ✅ navigate
+              onPress={() => router.push('/(tabs)/schedule')}
             >
               View Schedule
             </Button>
           </Card.Actions>
         </Card>
 
-        {/* --- Announcements --- */}
         <Card style={styles.card} mode="elevated">
           <Card.Title title="📢 Announcements" titleVariant="titleLarge" />
           <Card.Content>
-            <Text>
-              Get all campus updates and notifications in one place.
-            </Text>
+            <Text>Get all campus updates and notifications in one place.</Text>
           </Card.Content>
           <Card.Actions>
             <Button
               mode="text"
-              onPress={() => router.push('/(tabs)/announcements')} // ✅ navigate
+              onPress={() => router.push('/(tabs)/announcements')}
             >
               View
             </Button>
           </Card.Actions>
         </Card>
       </View>
-
-      {/* --- Profile Button --- */}
-      <Button
-        mode="contained-tonal"
-        style={styles.bigButton}
-        onPress={() => router.push('/profile/profile')}
- // ✅ go to profile page
-      >
-        Go to Profile
-      </Button>
     </ScrollView>
   );
 }
@@ -104,16 +133,25 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
   },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   banner: {
-    width: 200,
-    height: 200,
-    marginBottom: 16,
+    width: 160,
+    height: 160,
     borderRadius: 20,
+  },
+  avatarContainer: {
+    marginRight: 10,
   },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
     marginBottom: 6,
+    marginTop: 10,
   },
   subtitle: {
     textAlign: 'center',
@@ -127,10 +165,5 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     paddingBottom: 6,
-  },
-  bigButton: {
-    marginTop: 30,
-    width: '90%',
-    borderRadius: 30,
   },
 });
