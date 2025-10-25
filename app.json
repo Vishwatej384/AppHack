@@ -13,6 +13,9 @@
     "assetBundlePatterns": ["**/*"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "apiUrl": "http://10.231.26.111:5000"
     }
   }
 }

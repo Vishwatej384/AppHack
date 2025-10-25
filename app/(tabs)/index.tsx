@@ -1,35 +1,62 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Avatar, Button, Card, Text, useTheme } from 'react-native-paper';
 import { getCurrentUser } from '../utils/auth';
+
+// 🔹 Backend base URL — make sure to replace this IP with your current local IP
+const API_URL = 'http://10.231.26.111:5000/api'; 
 
 export default function HomeScreen() {
   const theme = useTheme();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [backendMessage, setBackendMessage] = useState<string>('Connecting to backend...');
 
+  // ✅ Load user + check backend connection
   useFocusEffect(
-  React.useCallback(() => {
-    let isActive = true;
+    React.useCallback(() => {
+      let isActive = true;
 
-    const fetchUser = async () => {
+      const fetchUserAndBackend = async () => {
+        try {
+          // 🔹 Get local user (Firebase Auth or local)
+          const currentUser = await getCurrentUser();
+          if (isActive) setUser(currentUser);
+
+          // 🔹 Test backend connection
+          const response = await fetch(`${API_URL}/test`);
+          const data = await response.json();
+          console.log("✅ Backend response:", data);
+          if (isActive) setBackendMessage(data.message || "✅ Backend Connected Successfully!");
+        } catch (e) {
+          console.warn("⚠️ Backend or user fetch error:", e);
+          if (isActive) setBackendMessage("❌ Failed to connect to backend");
+        }
+      };
+
+      fetchUserAndBackend();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  // 🧩 Optional: Automatically log connection result once on first mount
+  useEffect(() => {
+    const testOnce = async () => {
       try {
-        const currentUser = await getCurrentUser();
-        if (isActive) setUser(currentUser);
-      } catch (e) {
-        console.warn('fetchUser error', e);
+        const response = await fetch(`${API_URL}/test`);
+        const data = await response.json();
+        console.log("🌐 One-time backend check:", data);
+      } catch (error) {
+        console.error("Backend check failed:", error);
       }
     };
-
-    fetchUser();
-
-    return () => {
-      isActive = false;
-    };
-  }, [])
-);
+    testOnce();
+  }, []);
 
   const initials =
     user?.name
@@ -76,6 +103,21 @@ export default function HomeScreen() {
       >
         Your digital companion for campus life — events, classes, and more!
       </Text>
+
+      {/* 🔹 Show backend connection status */}
+      <Card style={styles.statusCard} mode="outlined">
+        <Card.Content>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              color: backendMessage.includes('✅') ? 'green' : 'red',
+            }}
+          >
+            {backendMessage}
+          </Text>
+        </Card.Content>
+      </Card>
 
       {/* --- Cards --- */}
       <View style={styles.cardsContainer}>
@@ -157,6 +199,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     fontSize: 16,
+  },
+  statusCard: {
+    width: '100%',
+    borderRadius: 12,
+    marginBottom: 16,
+    padding: 8,
   },
   cardsContainer: {
     width: '100%',
