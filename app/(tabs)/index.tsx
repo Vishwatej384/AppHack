@@ -1,98 +1,116 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import React from 'react';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Card, Text, useTheme } from 'react-native-paper';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const theme = useTheme();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  return (
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Image
+        source={require('../../assets/images/icon.png')}
+        style={styles.banner}
+      />
+
+      <Text variant="headlineLarge" style={[styles.title, { color: theme.colors.primary }]}>
+        Welcome to Smart Campus 🎓
+      </Text>
+
+      <Text style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+        Your digital companion for campus life — events, classes, and more!
+      </Text>
+
+      <View style={styles.cardsContainer}>
+        <Card style={styles.card} mode="elevated">
+          <Card.Title
+            title="🎉 Campus Events"
+            titleVariant="titleLarge"
+          />
+          <Card.Content>
+            <Text>
+              Stay updated with upcoming fests, seminars, and workshops.
+            </Text>
+          </Card.Content>
+          <Card.Actions>
+            <Button mode="contained" onPress={() => alert('Explore Events')}>
+              Explore
+            </Button>
+          </Card.Actions>
+        </Card>
+
+        <Card style={styles.card} mode="elevated">
+          <Card.Title
+            title="📚 Class Schedule"
+            titleVariant="titleLarge"
+          />
+          <Card.Content>
+            <Text>Track your classes and attendance easily.</Text>
+          </Card.Content>
+          <Card.Actions>
+            <Button mode="outlined" onPress={() => alert('View Schedule')}>
+              View Schedule
+            </Button>
+          </Card.Actions>
+        </Card>
+
+        <Card style={styles.card} mode="elevated">
+          <Card.Title
+            title="📢 Announcements"
+            titleVariant="titleLarge"
+          />
+          <Card.Content>
+            <Text>Get all campus updates and notifications in one place.</Text>
+          </Card.Content>
+          <Card.Actions>
+            <Button mode="text" onPress={() => alert('See Announcements')}>
+              View
+            </Button>
+          </Card.Actions>
+        </Card>
+      </View>
+
+      <Button
+        mode="contained-tonal"
+        style={styles.bigButton}
+        onPress={() => alert('Profile Page Coming Soon')}>
+        Go to Profile
+      </Button>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    padding: 20,
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  banner: {
+    width: 200,
+    height: 200,
+    marginBottom: 16,
+    borderRadius: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  title: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: 20,
+    fontSize: 16,
+  },
+  cardsContainer: {
+    width: '100%',
+    gap: 16,
+  },
+  card: {
+    borderRadius: 16,
+    paddingBottom: 6,
+  },
+  bigButton: {
+    marginTop: 30,
+    width: '90%',
+    borderRadius: 30,
   },
 });
